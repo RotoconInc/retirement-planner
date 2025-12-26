@@ -15,6 +15,7 @@ import { CHART_COLORS } from '../utils/constants';
 
 interface ChartIncomeProps {
   result: RetirementResult;
+  isDarkMode?: boolean;
 }
 
 function formatCurrency(value: number): string {
@@ -35,7 +36,11 @@ function formatTooltipValue(value: number): string {
   }).format(value);
 }
 
-export function ChartIncome({ result }: ChartIncomeProps) {
+export function ChartIncome({ result, isDarkMode = false }: ChartIncomeProps) {
+  // Colors based on dark mode
+  const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
+  const tickColor = isDarkMode ? '#9ca3af' : '#6b7280';
+  const tickLineColor = isDarkMode ? '#4b5563' : '#d1d5db';
   // Transform data for the chart
   // Show gross income as stacked bars (positive), taxes as separate negative bar
   const chartData = result.yearlyWithdrawals.map(year => ({
@@ -59,30 +64,30 @@ export function ChartIncome({ result }: ChartIncomeProps) {
     if (!yearData) return null;
 
     return (
-      <div className="bg-white p-3 border rounded-lg shadow-lg">
-        <p className="font-medium text-gray-900 mb-2">Age {label}</p>
+      <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+        <p className="font-medium text-gray-900 dark:text-white mb-2">Age {label}</p>
         <div className="space-y-1 text-sm">
           <div className="flex justify-between gap-4">
             <span style={{ color: CHART_COLORS.pretax }}>Withdrawals:</span>
-            <span className="font-medium">{formatTooltipValue(yearData.totalWithdrawal)}</span>
+            <span className="font-medium text-gray-900 dark:text-white">{formatTooltipValue(yearData.totalWithdrawal)}</span>
           </div>
           {yearData.socialSecurityIncome > 0 && (
             <div className="flex justify-between gap-4">
               <span style={{ color: CHART_COLORS.socialSecurity }}>Social Security:</span>
-              <span className="font-medium">{formatTooltipValue(yearData.socialSecurityIncome)}</span>
+              <span className="font-medium text-gray-900 dark:text-white">{formatTooltipValue(yearData.socialSecurityIncome)}</span>
             </div>
           )}
-          <div className="flex justify-between gap-4 border-t pt-1 mt-1">
-            <span className="text-gray-600">Gross Income:</span>
-            <span className="font-medium">{formatTooltipValue(yearData.grossIncome)}</span>
+          <div className="flex justify-between gap-4 border-t border-gray-200 dark:border-gray-600 pt-1 mt-1">
+            <span className="text-gray-600 dark:text-gray-400">Gross Income:</span>
+            <span className="font-medium text-gray-900 dark:text-white">{formatTooltipValue(yearData.grossIncome)}</span>
           </div>
           <div className="flex justify-between gap-4">
             <span style={{ color: CHART_COLORS.tax }}>Taxes:</span>
-            <span className="font-medium text-red-600">-{formatTooltipValue(yearData.totalTax)}</span>
+            <span className="font-medium text-red-600 dark:text-red-400">-{formatTooltipValue(yearData.totalTax)}</span>
           </div>
-          <div className="border-t mt-2 pt-2 flex justify-between gap-4 font-semibold">
+          <div className="border-t border-gray-200 dark:border-gray-600 mt-2 pt-2 flex justify-between gap-4 font-semibold">
             <span style={{ color: CHART_COLORS.spending }}>After-Tax Income:</span>
-            <span>{formatTooltipValue(yearData.afterTaxIncome)}</span>
+            <span className="text-gray-900 dark:text-white">{formatTooltipValue(yearData.afterTaxIncome)}</span>
           </div>
         </div>
       </div>
@@ -93,20 +98,25 @@ export function ChartIncome({ result }: ChartIncomeProps) {
     <div className="w-full h-80">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis
             dataKey="age"
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
           />
           <YAxis
             tickFormatter={formatCurrency}
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
             width={60}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Legend wrapperStyle={{ paddingTop: '10px' }} />
+          <Legend
+            wrapperStyle={{ paddingTop: '10px' }}
+            formatter={(value) => <span style={{ color: tickColor }}>{value}</span>}
+          />
           <ReferenceLine y={0} stroke="#9ca3af" />
           {/* Gross income components - stacked bars */}
           <Bar

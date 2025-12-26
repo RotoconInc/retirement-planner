@@ -282,7 +282,7 @@ function App() {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Portfolio Composition at Retirement
                     </h3>
-                    <ChartComposition accounts={accounts} result={accumulation} />
+                    <ChartComposition accounts={accounts} result={accumulation} isDarkMode={isDarkMode} />
                   </div>
                 </div>
               )}
@@ -294,14 +294,14 @@ function App() {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Account Growth (Age {profile.currentAge} to {profile.retirementAge})
                     </h3>
-                    <ChartAccumulation accounts={accounts} result={accumulation} />
+                    <ChartAccumulation accounts={accounts} result={accumulation} isDarkMode={isDarkMode} />
                   </div>
 
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Portfolio Composition at Retirement
                     </h3>
-                    <ChartComposition accounts={accounts} result={accumulation} />
+                    <ChartComposition accounts={accounts} result={accumulation} isDarkMode={isDarkMode} />
                   </div>
                 </div>
               )}
@@ -313,21 +313,21 @@ function App() {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Portfolio Drawdown (Age {profile.retirementAge} to {profile.lifeExpectancy})
                     </h3>
-                    <ChartDrawdown accounts={accounts} result={retirement} />
+                    <ChartDrawdown accounts={accounts} result={retirement} isDarkMode={isDarkMode} />
                   </div>
 
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Annual Retirement Income
                     </h3>
-                    <ChartIncome result={retirement} />
+                    <ChartIncome result={retirement} isDarkMode={isDarkMode} />
                   </div>
 
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Tax Burden Over Time
                     </h3>
-                    <ChartTax result={retirement} />
+                    <ChartTax result={retirement} isDarkMode={isDarkMode} />
                   </div>
                 </div>
               )}

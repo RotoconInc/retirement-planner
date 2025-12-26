@@ -14,6 +14,7 @@ import { CHART_COLORS } from '../utils/constants';
 
 interface ChartTaxProps {
   result: RetirementResult;
+  isDarkMode?: boolean;
 }
 
 function formatCurrency(value: number): string {
@@ -34,7 +35,11 @@ function formatTooltipValue(value: number): string {
   }).format(value);
 }
 
-export function ChartTax({ result }: ChartTaxProps) {
+export function ChartTax({ result, isDarkMode = false }: ChartTaxProps) {
+  // Colors based on dark mode
+  const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
+  const tickColor = isDarkMode ? '#9ca3af' : '#6b7280';
+  const tickLineColor = isDarkMode ? '#4b5563' : '#d1d5db';
   // Transform data for the chart
   const chartData = result.yearlyWithdrawals.map(year => {
     const effectiveRate = year.grossIncome > 0
@@ -65,23 +70,23 @@ export function ChartTax({ result }: ChartTaxProps) {
       : '0.0';
 
     return (
-      <div className="bg-white p-3 border rounded-lg shadow-lg">
-        <p className="font-medium text-gray-900 mb-2">Age {label}</p>
+      <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+        <p className="font-medium text-gray-900 dark:text-white mb-2">Age {label}</p>
         <div className="space-y-1 text-sm">
           <div className="flex justify-between gap-4">
-            <span className="text-blue-600">Federal Tax:</span>
-            <span className="font-medium">{formatTooltipValue(yearData.federalTax)}</span>
+            <span className="text-blue-600 dark:text-blue-400">Federal Tax:</span>
+            <span className="font-medium text-gray-900 dark:text-white">{formatTooltipValue(yearData.federalTax)}</span>
           </div>
           <div className="flex justify-between gap-4">
-            <span className="text-purple-600">State Tax:</span>
-            <span className="font-medium">{formatTooltipValue(yearData.stateTax)}</span>
+            <span className="text-purple-600 dark:text-purple-400">State Tax:</span>
+            <span className="font-medium text-gray-900 dark:text-white">{formatTooltipValue(yearData.stateTax)}</span>
           </div>
-          <div className="border-t mt-2 pt-2">
+          <div className="border-t border-gray-200 dark:border-gray-600 mt-2 pt-2">
             <div className="flex justify-between gap-4 font-semibold">
               <span style={{ color: CHART_COLORS.tax }}>Total Tax:</span>
-              <span>{formatTooltipValue(yearData.totalTax)}</span>
+              <span className="text-gray-900 dark:text-white">{formatTooltipValue(yearData.totalTax)}</span>
             </div>
-            <div className="flex justify-between gap-4 text-gray-600 mt-1">
+            <div className="flex justify-between gap-4 text-gray-600 dark:text-gray-400 mt-1">
               <span>Effective Rate:</span>
               <span>{effectiveRate}%</span>
             </div>
@@ -95,30 +100,36 @@ export function ChartTax({ result }: ChartTaxProps) {
     <div className="w-full h-80">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={chartData} margin={{ top: 10, right: 50, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis
             dataKey="age"
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
           />
           <YAxis
             yAxisId="left"
             tickFormatter={formatCurrency}
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
             width={60}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
             tickFormatter={(v) => `${v.toFixed(0)}%`}
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
             domain={[0, 40]}
             width={50}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Legend wrapperStyle={{ paddingTop: '10px' }} />
+          <Legend
+            wrapperStyle={{ paddingTop: '10px' }}
+            formatter={(value) => <span style={{ color: tickColor }}>{value}</span>}
+          />
           <Bar
             yAxisId="left"
             dataKey="federalTax"

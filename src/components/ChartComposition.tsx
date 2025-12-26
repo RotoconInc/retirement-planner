@@ -12,6 +12,7 @@ import { CHART_COLORS } from '../utils/constants';
 interface ChartCompositionProps {
   accounts: Account[];
   result: AccumulationResult;
+  isDarkMode?: boolean;
 }
 
 function formatCurrency(value: number): string {
@@ -29,7 +30,9 @@ const TAX_TREATMENT_LABELS: Record<TaxTreatment, string> = {
   hsa: 'HSA',
 };
 
-export function ChartComposition({ accounts, result }: ChartCompositionProps) {
+export function ChartComposition({ accounts, result, isDarkMode = false }: ChartCompositionProps) {
+  // Colors based on dark mode
+  const labelColor = isDarkMode ? '#9ca3af' : '#374151';
   // Create data by tax treatment
   const taxTreatmentData = Object.entries(result.breakdownByTaxTreatment)
     .filter(([_, value]) => value > 0)
@@ -60,17 +63,17 @@ export function ChartComposition({ accounts, result }: ChartCompositionProps) {
     const percentage = ((data.value / total) * 100).toFixed(1);
 
     return (
-      <div className="bg-white p-3 border rounded-lg shadow-lg">
+      <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
         <div className="flex items-center gap-2">
           <div
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: data.payload.color }}
           />
-          <span className="font-medium">{data.name}</span>
+          <span className="font-medium text-gray-900 dark:text-white">{data.name}</span>
         </div>
         <div className="mt-1 text-sm">
-          <div>{formatCurrency(data.value)}</div>
-          <div className="text-gray-500">{percentage}% of portfolio</div>
+          <div className="text-gray-900 dark:text-white">{formatCurrency(data.value)}</div>
+          <div className="text-gray-500 dark:text-gray-400">{percentage}% of portfolio</div>
         </div>
       </div>
     );
@@ -110,7 +113,7 @@ export function ChartComposition({ accounts, result }: ChartCompositionProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* By Tax Treatment */}
       <div>
-        <h4 className="text-sm font-medium text-gray-700 text-center mb-2">
+        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 text-center mb-2">
           By Tax Treatment
         </h4>
         <div className="h-64">
@@ -134,7 +137,7 @@ export function ChartComposition({ accounts, result }: ChartCompositionProps) {
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 wrapperStyle={{ fontSize: '12px' }}
-                formatter={(value) => <span className="text-gray-700">{value}</span>}
+                formatter={(value) => <span style={{ color: labelColor }}>{value}</span>}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -143,7 +146,7 @@ export function ChartComposition({ accounts, result }: ChartCompositionProps) {
 
       {/* By Account */}
       <div>
-        <h4 className="text-sm font-medium text-gray-700 text-center mb-2">
+        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 text-center mb-2">
           By Account
         </h4>
         <div className="h-64">
@@ -167,7 +170,7 @@ export function ChartComposition({ accounts, result }: ChartCompositionProps) {
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 wrapperStyle={{ fontSize: '12px' }}
-                formatter={(value) => <span className="text-gray-700">{value}</span>}
+                formatter={(value) => <span style={{ color: labelColor }}>{value}</span>}
               />
             </PieChart>
           </ResponsiveContainer>

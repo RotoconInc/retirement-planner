@@ -14,6 +14,7 @@ import { CHART_COLORS } from '../utils/constants';
 interface ChartDrawdownProps {
   accounts: Account[];
   result: RetirementResult;
+  isDarkMode?: boolean;
 }
 
 function formatCurrency(value: number): string {
@@ -34,7 +35,11 @@ function formatTooltipValue(value: number): string {
   }).format(value);
 }
 
-export function ChartDrawdown({ accounts, result }: ChartDrawdownProps) {
+export function ChartDrawdown({ accounts, result, isDarkMode = false }: ChartDrawdownProps) {
+  // Colors based on dark mode
+  const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
+  const tickColor = isDarkMode ? '#9ca3af' : '#6b7280';
+  const tickLineColor = isDarkMode ? '#4b5563' : '#d1d5db';
   // Transform data for the stacked area chart
   const chartData = result.yearlyWithdrawals.map(year => {
     const dataPoint: Record<string, number | string> = {
@@ -66,24 +71,24 @@ export function ChartDrawdown({ accounts, result }: ChartDrawdownProps) {
     const total = payload.reduce((sum, entry) => sum + entry.value, 0);
 
     return (
-      <div className="bg-white p-3 border rounded-lg shadow-lg">
-        <p className="font-medium text-gray-900 mb-2">Age {label}</p>
+      <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+        <p className="font-medium text-gray-900 dark:text-white mb-2">Age {label}</p>
         {payload.filter(p => p.value > 0).reverse().map((entry, index) => {
           const account = accounts.find(a => a.id === entry.name);
           return (
             <div key={index} className="flex justify-between gap-4 text-sm">
               <span style={{ color: entry.color }}>{account?.name || entry.name}:</span>
-              <span className="font-medium">{formatTooltipValue(entry.value)}</span>
+              <span className="font-medium text-gray-900 dark:text-white">{formatTooltipValue(entry.value)}</span>
             </div>
           );
         })}
-        <div className="border-t mt-2 pt-2 space-y-1 text-sm">
-          <div className="flex justify-between gap-4 font-semibold">
+        <div className="border-t border-gray-200 dark:border-gray-600 mt-2 pt-2 space-y-1 text-sm">
+          <div className="flex justify-between gap-4 font-semibold text-gray-900 dark:text-white">
             <span>Total Portfolio:</span>
             <span>{formatTooltipValue(total)}</span>
           </div>
           {yearData && (
-            <div className="flex justify-between gap-4 text-gray-600">
+            <div className="flex justify-between gap-4 text-gray-600 dark:text-gray-400">
               <span>Annual Withdrawal:</span>
               <span>{formatTooltipValue(yearData.totalWithdrawal)}</span>
             </div>
@@ -97,16 +102,18 @@ export function ChartDrawdown({ accounts, result }: ChartDrawdownProps) {
     <div className="w-full h-80">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis
             dataKey="age"
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
           />
           <YAxis
             tickFormatter={formatCurrency}
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#d1d5db' }}
+            tick={{ fontSize: 12, fill: tickColor }}
+            tickLine={{ stroke: tickLineColor }}
+            stroke={tickLineColor}
             width={60}
           />
           <Tooltip content={<CustomTooltip />} />
@@ -114,7 +121,7 @@ export function ChartDrawdown({ accounts, result }: ChartDrawdownProps) {
             wrapperStyle={{ paddingTop: '10px' }}
             formatter={(value) => {
               const account = accounts.find(a => a.id === value);
-              return account?.name || value;
+              return <span style={{ color: tickColor }}>{account?.name || value}</span>;
             }}
           />
           {sortedAccounts.map(account => (
