@@ -14,6 +14,8 @@ import { ChartIncome } from './components/ChartIncome';
 import { ChartTax } from './components/ChartTax';
 import { ChartComposition } from './components/ChartComposition';
 import { MethodologyPanel } from './components/MethodologyPanel';
+import { DataTableAccumulation } from './components/DataTableAccumulation';
+import { DataTableWithdrawal } from './components/DataTableWithdrawal';
 import { v4 as uuidv4 } from 'uuid';
 
 // Default accounts for demonstration
@@ -299,6 +301,8 @@ function App() {
                     <ChartAccumulation accounts={accounts} result={accumulation} isDarkMode={isDarkMode} />
                   </div>
 
+                  <DataTableAccumulation accounts={accounts} result={accumulation} />
+
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                       Portfolio Composition at Retirement
@@ -331,6 +335,8 @@ function App() {
                     </h3>
                     <ChartTax result={retirement} isDarkMode={isDarkMode} />
                   </div>
+
+                  <DataTableWithdrawal accounts={accounts} result={retirement} />
                 </div>
               )}
 
