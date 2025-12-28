@@ -13,6 +13,7 @@ import { ChartDrawdown } from './components/ChartDrawdown';
 import { ChartIncome } from './components/ChartIncome';
 import { ChartTax } from './components/ChartTax';
 import { ChartComposition } from './components/ChartComposition';
+import { MethodologyPanel } from './components/MethodologyPanel';
 import { v4 as uuidv4 } from 'uuid';
 
 // Default accounts for demonstration
@@ -39,7 +40,7 @@ const createDefaultAccounts = (): Account[] => [
   },
 ];
 
-type TabType = 'accumulation' | 'retirement' | 'summary';
+type TabType = 'accumulation' | 'retirement' | 'summary' | 'methodology';
 
 function App() {
   // Use localStorage for persistence
@@ -105,6 +106,7 @@ function App() {
     { id: 'summary', label: 'Summary' },
     { id: 'accumulation', label: 'Accumulation Phase' },
     { id: 'retirement', label: 'Retirement Phase' },
+    { id: 'methodology', label: 'Methodology' },
   ];
 
   return (
@@ -330,6 +332,11 @@ function App() {
                     <ChartTax result={retirement} isDarkMode={isDarkMode} />
                   </div>
                 </div>
+              )}
+
+              {/* Methodology Tab */}
+              {activeTab === 'methodology' && (
+                <MethodologyPanel profile={profile} assumptions={assumptions} />
               )}
             </>
           )}
