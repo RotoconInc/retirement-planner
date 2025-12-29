@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Account, AccountType, getAccountTypeLabel, is401k } from '../types';
+import { NumberInput } from './NumberInput';
 import { v4 as uuidv4 } from 'uuid';
 
 interface AccountFormProps {
@@ -16,6 +17,9 @@ const defaultAccount: Omit<Account, 'id'> = {
   contributionGrowthRate: 0.03,
   returnRate: 0.07,
 };
+
+const inputClassName = "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white";
+const inputErrorClassName = "w-full px-3 py-2 border border-red-500 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white";
 
 export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
   // Initialize form data from account prop (component is re-mounted with key when account changes)
@@ -97,9 +101,7 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
           value={formData.name}
           onChange={(e) => handleChange('name', e.target.value)}
           placeholder="e.g., Company 401(k)"
-          className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white ${
-            errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-          }`}
+          className={errors.name ? inputErrorClassName : inputClassName}
         />
         {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
       </div>
@@ -111,7 +113,7 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
         <select
           value={formData.type}
           onChange={(e) => handleChange('type', e.target.value as AccountType)}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+          className={inputClassName}
         >
           {accountTypes.map(type => (
             <option key={type} value={type}>
@@ -126,14 +128,12 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Current Balance ($)
           </label>
-          <input
-            type="number"
+          <NumberInput
             value={formData.balance}
-            onChange={(e) => handleChange('balance', parseFloat(e.target.value) || 0)}
+            onChange={(val) => handleChange('balance', val)}
             min={0}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white ${
-              errors.balance ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-            }`}
+            defaultValue={0}
+            className={errors.balance ? inputErrorClassName : inputClassName}
           />
           {errors.balance && <p className="text-red-500 text-xs mt-1">{errors.balance}</p>}
         </div>
@@ -142,14 +142,12 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Annual Contribution ($)
           </label>
-          <input
-            type="number"
+          <NumberInput
             value={formData.annualContribution}
-            onChange={(e) => handleChange('annualContribution', parseFloat(e.target.value) || 0)}
+            onChange={(val) => handleChange('annualContribution', val)}
             min={0}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white ${
-              errors.annualContribution ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-            }`}
+            defaultValue={0}
+            className={errors.annualContribution ? inputErrorClassName : inputClassName}
           />
           {errors.annualContribution && (
             <p className="text-red-500 text-xs mt-1">{errors.annualContribution}</p>
@@ -165,14 +163,15 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
               ⓘ
             </span>
           </label>
-          <input
-            type="number"
-            value={(formData.contributionGrowthRate * 100).toFixed(1)}
-            onChange={(e) => handleChange('contributionGrowthRate', (parseFloat(e.target.value) || 0) / 100)}
+          <NumberInput
+            value={formData.contributionGrowthRate}
+            onChange={(val) => handleChange('contributionGrowthRate', val)}
             min={0}
             max={20}
-            step={0.1}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+            isPercentage
+            decimals={1}
+            defaultValue={0.03}
+            className={inputClassName}
           />
         </div>
 
@@ -180,14 +179,15 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Expected Return (%)
           </label>
-          <input
-            type="number"
-            value={(formData.returnRate * 100).toFixed(1)}
-            onChange={(e) => handleChange('returnRate', (parseFloat(e.target.value) || 0) / 100)}
+          <NumberInput
+            value={formData.returnRate}
+            onChange={(val) => handleChange('returnRate', val)}
             min={0}
             max={20}
-            step={0.1}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+            isPercentage
+            decimals={1}
+            defaultValue={0.07}
+            className={inputClassName}
           />
         </div>
       </div>
@@ -203,14 +203,15 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
                   ⓘ
                 </span>
               </label>
-              <input
-                type="number"
-                value={((formData.employerMatchPercent || 0) * 100).toFixed(0)}
-                onChange={(e) => handleChange('employerMatchPercent', (parseFloat(e.target.value) || 0) / 100)}
+              <NumberInput
+                value={formData.employerMatchPercent || 0}
+                onChange={(val) => handleChange('employerMatchPercent', val)}
                 min={0}
                 max={200}
-                step={1}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+                isPercentage
+                decimals={0}
+                defaultValue={0}
+                className={inputClassName}
               />
             </div>
 
@@ -221,12 +222,12 @@ export function AccountForm({ account, onSave, onCancel }: AccountFormProps) {
                   ⓘ
                 </span>
               </label>
-              <input
-                type="number"
+              <NumberInput
                 value={formData.employerMatchLimit || 0}
-                onChange={(e) => handleChange('employerMatchLimit', parseFloat(e.target.value) || 0)}
+                onChange={(val) => handleChange('employerMatchLimit', val)}
                 min={0}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+                defaultValue={0}
+                className={inputClassName}
               />
             </div>
           </div>

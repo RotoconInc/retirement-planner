@@ -132,9 +132,13 @@ export function SummaryCards({
     yearlyWithdrawals,
   } = retirementResult;
 
+  // Validate age configuration
+  const hasInvalidAges = profile.lifeExpectancy <= profile.retirementAge ||
+    profile.retirementAge <= profile.currentAge;
+
   const yearsUntilDepletion = portfolioDepletionAge
-    ? portfolioDepletionAge - profile.retirementAge
-    : profile.lifeExpectancy - profile.retirementAge;
+    ? Math.max(0, portfolioDepletionAge - profile.retirementAge)
+    : Math.max(0, profile.lifeExpectancy - profile.retirementAge);
 
   const portfolioLasts = portfolioDepletionAge
     ? `${yearsUntilDepletion} years (depletes at age ${portfolioDepletionAge})`
@@ -151,8 +155,8 @@ export function SummaryCards({
     : STANDARD_DEDUCTION_SINGLE;
 
   // Calculate some useful derived values for display
-  const yearsToRetirement = profile.retirementAge - profile.currentAge;
-  const retirementYears = profile.lifeExpectancy - profile.retirementAge;
+  const yearsToRetirement = Math.max(0, profile.retirementAge - profile.currentAge);
+  const retirementYears = Math.max(0, profile.lifeExpectancy - profile.retirementAge);
 
   // Calculate average effective tax rate
   const avgEffectiveTaxRate = yearlyWithdrawals.length > 0
@@ -161,6 +165,24 @@ export function SummaryCards({
 
   return (
     <div className="space-y-6">
+      {/* Invalid Age Configuration Warning */}
+      {hasInvalidAges && (
+        <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+              <h4 className="font-medium text-amber-800 dark:text-amber-300">Invalid Age Configuration</h4>
+              <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
+                Please check your age settings. Current age ({profile.currentAge}) should be less than
+                retirement age ({profile.retirementAge}), which should be less than life expectancy ({profile.lifeExpectancy}).
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* At Retirement */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">

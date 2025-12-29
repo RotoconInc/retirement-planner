@@ -1,9 +1,12 @@
 import { Profile, FilingStatus } from '../types';
+import { NumberInput } from './NumberInput';
 
 interface ProfileFormProps {
   profile: Profile;
   onChange: (profile: Profile) => void;
 }
+
+const inputClassName = "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white";
 
 export function ProfileForm({ profile, onChange }: ProfileFormProps) {
   const handleChange = (field: keyof Profile, value: number | string) => {
@@ -22,13 +25,13 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Current Age
           </label>
-          <input
-            type="number"
+          <NumberInput
             value={profile.currentAge}
-            onChange={(e) => handleChange('currentAge', parseInt(e.target.value) || 0)}
+            onChange={(val) => handleChange('currentAge', val)}
             min={18}
             max={100}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            defaultValue={35}
+            className={inputClassName}
           />
         </div>
 
@@ -36,13 +39,13 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Retirement Age
           </label>
-          <input
-            type="number"
+          <NumberInput
             value={profile.retirementAge}
-            onChange={(e) => handleChange('retirementAge', parseInt(e.target.value) || 0)}
-            min={profile.currentAge + 1}
+            onChange={(val) => handleChange('retirementAge', val)}
+            min={18}
             max={100}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            defaultValue={65}
+            className={inputClassName}
           />
         </div>
 
@@ -50,13 +53,13 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Life Expectancy
           </label>
-          <input
-            type="number"
+          <NumberInput
             value={profile.lifeExpectancy}
-            onChange={(e) => handleChange('lifeExpectancy', parseInt(e.target.value) || 0)}
-            min={profile.retirementAge + 1}
+            onChange={(val) => handleChange('lifeExpectancy', val)}
+            min={18}
             max={120}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            defaultValue={90}
+            className={inputClassName}
           />
         </div>
 
@@ -67,7 +70,7 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           <select
             value={profile.filingStatus}
             onChange={(e) => handleChange('filingStatus', e.target.value as FilingStatus)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className={inputClassName}
           >
             <option value="single">Single</option>
             <option value="married_filing_jointly">Married Filing Jointly</option>
@@ -78,14 +81,15 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             State Tax Rate (%)
           </label>
-          <input
-            type="number"
-            value={(profile.stateTaxRate * 100).toFixed(1)}
-            onChange={(e) => handleChange('stateTaxRate', (parseFloat(e.target.value) || 0) / 100)}
+          <NumberInput
+            value={profile.stateTaxRate}
+            onChange={(val) => handleChange('stateTaxRate', val)}
             min={0}
             max={15}
-            step={0.1}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            isPercentage
+            decimals={1}
+            defaultValue={0.05}
+            className={inputClassName}
           />
         </div>
       </div>
@@ -100,13 +104,13 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
               ⓘ
             </span>
           </label>
-          <input
-            type="number"
-            value={profile.socialSecurityBenefit || ''}
-            onChange={(e) => handleChange('socialSecurityBenefit', parseFloat(e.target.value) || 0)}
+          <NumberInput
+            value={profile.socialSecurityBenefit || 0}
+            onChange={(val) => handleChange('socialSecurityBenefit', val)}
             min={0}
             placeholder="0"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            defaultValue={0}
+            className={inputClassName}
           />
         </div>
 
@@ -114,13 +118,13 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Start Age
           </label>
-          <input
-            type="number"
+          <NumberInput
             value={profile.socialSecurityStartAge || 67}
-            onChange={(e) => handleChange('socialSecurityStartAge', parseInt(e.target.value) || 67)}
+            onChange={(val) => handleChange('socialSecurityStartAge', val)}
             min={62}
             max={70}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            defaultValue={67}
+            className={inputClassName}
           />
         </div>
       </div>
