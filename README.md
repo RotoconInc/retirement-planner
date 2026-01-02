@@ -148,6 +148,7 @@ src/
 │   ├── NumberInput.tsx           # String to number conversion
 │   ├── ProfileForm.tsx           # Personal information form
 │   └── SummaryCards.tsx          # Expandable key metrics display
+│   └── Tooltip.tsx               # Reusable tooltip componenet
 ├── hooks/
 │   ├── useLocalStorage.ts    # localStorage persistence hook
 │   └── useRetirementCalc.ts  # Main calculation orchestrator
