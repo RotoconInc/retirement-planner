@@ -276,14 +276,6 @@ Tests cover:
 ### Contributors
 - **bwillem** ([@bguenther3](mailto:bguenther3@gmail.com)) - Multi-country support (Canada)
 
-### Multi-Country Support
-The Canada support feature was contributed by bwillem, adding:
-- Complete Canadian tax system implementation
-- Canadian retirement account types (RRSP, TFSA, RRIF, etc.)
-- CPP and OAS benefit calculations
-- Provincial tax rates for all provinces and territories
-- RRIF minimum withdrawal calculations
-
 ## Disclaimer
 
 This tool provides estimates only and should not be considered financial advice. Tax laws change frequently, and individual circumstances vary. Consult a qualified financial advisor for personalized retirement planning.
