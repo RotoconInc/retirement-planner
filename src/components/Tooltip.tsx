@@ -41,12 +41,12 @@ export function Tooltip({ text }: TooltipProps) {
       </button>
       {/* Desktop: show on hover via group-hover. Mobile: show on click via isVisible */}
       <span
-        className={`absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded shadow-lg whitespace-normal w-48 text-center pointer-events-none
+        className={`absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-500 rounded shadow-lg whitespace-normal w-48 text-center pointer-events-none
           ${isVisible ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}
           transition-opacity duration-150`}
       >
         {text}
-        <span className="absolute left-1/2 -translate-x-1/2 top-full border-4 border-transparent border-t-gray-800 dark:border-t-gray-700" />
+        <span className="absolute left-1/2 -translate-x-1/2 top-full border-4 border-transparent border-t-gray-800 dark:border-t-gray-500" />
       </span>
     </span>
   );
