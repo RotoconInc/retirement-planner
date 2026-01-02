@@ -166,6 +166,46 @@ export function ProfileForm({ profile, onChange }: ProfileFormProps) {
           />
         </div>
       </div>
+
+      {/* OAS Section - Canada Only */}
+      {country === 'CA' && (
+        <>
+          <h4 className="text-md font-medium text-gray-800 dark:text-gray-200 mt-6 mb-3">
+            OAS (Old Age Security)
+          </h4>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Annual Benefit (today's $)
+                <Tooltip text="Your estimated annual OAS benefit in today's dollars. Max is ~$9,000/year in 2024." />
+              </label>
+              <NumberInput
+                value={profile.secondaryBenefitAmount || 0}
+                onChange={(val) => handleChange('secondaryBenefitAmount', val)}
+                min={0}
+                placeholder="0"
+                defaultValue={0}
+                className={inputClassName}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Start Age
+              </label>
+              <NumberInput
+                value={profile.secondaryBenefitStartAge || 65}
+                onChange={(val) => handleChange('secondaryBenefitStartAge', val)}
+                min={65}
+                max={70}
+                defaultValue={65}
+                className={inputClassName}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
