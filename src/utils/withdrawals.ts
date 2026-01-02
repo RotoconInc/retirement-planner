@@ -115,6 +115,9 @@ export function calculateWithdrawals(
     const socialSecurityIncome = governmentBenefits; // Keep variable name for compatibility
 
     // Calculate minimum required withdrawals (RMD/RRIF) for each traditional account
+    // NOTE: Per IRS rules, RMDs are calculated per-account, not on total balance.
+    // Each account's RMD is based on that account's prior year-end balance.
+    // This is also correct for Canadian RRIF minimums.
     // Use country config for traditional detection if available
     const isTraditionalAccount = (type: string) =>
       countryConfig ? countryConfig.isTraditionalAccount(type) : isTraditional(type as any);
