@@ -193,6 +193,6 @@ export function is401k(type: AccountType): boolean {
   return type === 'traditional_401k' || type === 'roth_401k';
 }
 
-export function isTraditional(type: AccountType): boolean {
+export function isTraditional(type: string): boolean {
   return type === 'traditional_401k' || type === 'traditional_ira';
 }

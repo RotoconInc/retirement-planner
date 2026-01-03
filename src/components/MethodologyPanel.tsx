@@ -18,7 +18,6 @@ import {
   RRIF_MINIMUM_TABLE,
   RRIF_START_AGE,
   CPP_MAX_MONTHLY,
-  CPP_START_AGE_DEFAULT,
   OAS_MAX_MONTHLY,
   OAS_CLAWBACK_THRESHOLD,
   CAPITAL_GAINS_INCLUSION_RATE_DEFAULT,
@@ -45,7 +44,7 @@ function formatPercent(value: number): string {
 }
 
 export function MethodologyPanel({ profile, assumptions }: MethodologyPanelProps) {
-  const { country, config } = useCountry();
+  const { country } = useCountry();
   const isCanada = country === 'CA';
   const currency = isCanada ? 'CAD' : 'USD';
 

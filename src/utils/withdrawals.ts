@@ -120,7 +120,7 @@ export function calculateWithdrawals(
     // This is also correct for Canadian RRIF minimums.
     // Use country config for traditional detection if available
     const isTraditionalAccount = (type: string) =>
-      countryConfig ? countryConfig.isTraditionalAccount(type) : isTraditional(type as any);
+      countryConfig ? countryConfig.isTraditionalAccount(type) : isTraditional(type);
     let totalMinimumWithdrawal = 0;
     accountStates
       .filter(acc => isTraditionalAccount(acc.type))
@@ -283,7 +283,7 @@ function performTaxOptimizedWithdrawal(
 
   // Get account groups - use country config for traditional detection if available
   const isTraditionalAccount = (type: string) =>
-    countryConfig ? countryConfig.isTraditionalAccount(type) : isTraditional(type as any);
+    countryConfig ? countryConfig.isTraditionalAccount(type) : isTraditional(type);
   const traditionalAccounts = accountStates.filter(acc => isTraditionalAccount(acc.type));
   const rothAccounts = accountStates.filter(acc =>
     getTaxTreatment(acc.type) === 'roth'

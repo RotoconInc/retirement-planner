@@ -107,9 +107,10 @@ export function calculateCanadianRetirementBenefits(
 
   // OAS Calculation
   // Using secondaryBenefitStartAge and secondaryBenefitAmount for OAS
-  const oasStartAge = (profile as any).secondaryBenefitStartAge || OAS_START_AGE_DEFAULT;
-  const oasBaseMonthly = (profile as any).secondaryBenefitAmount ?
-    (profile as any).secondaryBenefitAmount / 12 : OAS_MAX_MONTHLY;
+  const oasStartAge = profile.secondaryBenefitStartAge || OAS_START_AGE_DEFAULT;
+  const oasBaseMonthly = profile.secondaryBenefitAmount
+    ? profile.secondaryBenefitAmount / 12
+    : OAS_MAX_MONTHLY;
 
   if (currentAge >= oasStartAge) {
     const adjustedOASMonthly = calculateOASAdjustment(oasStartAge, oasBaseMonthly);
