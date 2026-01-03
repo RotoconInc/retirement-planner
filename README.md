@@ -10,9 +10,26 @@ Hosted at: [https://mjcrepeau.github.io/retirement-planner/](https://mjcrepeau.g
 
 ## Features
 
+### Multi-Country Support
+The calculator supports retirement planning for both **United States** and **Canada**:
+
+#### United States
+- **Account Types**: Traditional 401(k), Roth 401(k), Traditional IRA, Roth IRA, Taxable Brokerage, HSA
+- **Tax System**: Federal income tax brackets, state tax rates, capital gains rates
+- **Benefits**: Social Security integration with configurable start age
+- **RMDs**: Required Minimum Distributions starting at age 73
+
+#### Canada
+- **Account Types**: RRSP, TFSA, RRIF, LIRA, LIF, FHSA, Non-registered, Employer RRSP
+- **Tax System**: Federal tax brackets, provincial tax rates by region
+- **Benefits**: CPP (Canada Pension Plan) and OAS (Old Age Security)
+- **RRIF Minimums**: Mandatory withdrawals starting at age 71
+
+Switching countries automatically resets accounts and profile to country-appropriate defaults.
+
 ### Portfolio Management
-- **Multiple Account Types**: Support for Traditional 401(k), Roth 401(k), Traditional IRA, Roth IRA, Taxable Brokerage, and HSA accounts
-- **Employer Matching**: Configure employer match percentage and limits for 401(k) accounts
+- **Multiple Account Types**: Support for US and Canadian retirement account types
+- **Employer Matching**: Configure employer match percentage and limits for 401(k)/RRSP accounts
 - **Individual Returns**: Set expected return rates per account
 - **Contribution Growth**: Model salary increases affecting future contributions
 
@@ -31,11 +48,19 @@ The withdrawal algorithm follows a tax-efficient strategy:
 5. **HSA**: Used last, tax-free for qualified medical expenses
 
 ### Tax Calculations
+
+#### United States
 - 2024 Federal income tax brackets (Single and Married Filing Jointly)
 - Long-term capital gains rates with 0%/15%/20% brackets
 - State tax rate configuration
 - Standard deduction applied automatically
 - Social Security taxation (85% taxable)
+
+#### Canada
+- 2024 Federal tax brackets with Basic Personal Amount
+- Provincial tax rates for all provinces and territories
+- Capital gains inclusion rate (50% or 66.67% for gains over $250k)
+- CPP/OAS benefit integration
 
 ### Visualizations
 - **Accumulation Chart**: Stacked area chart showing portfolio growth by account
@@ -141,14 +166,31 @@ src/
 │   ├── ChartDrawdown.tsx         # Retirement drawdown chart
 │   ├── ChartIncome.tsx           # Retirement income chart
 │   ├── ChartTax.tsx              # Tax burden chart
+│   ├── CountrySelector.tsx       # Country switching dropdown
 │   ├── DataTableAccumulation.tsx # Year-by-year accumulation data
 │   ├── DataTableWithdrawal.tsx   # Year-by-year withdrawal data
 │   ├── Layout.tsx                # App layout with header/footer
 │   ├── MethodologyPanel.tsx      # Formulas & assumptions reference
 │   ├── NumberInput.tsx           # String to number conversion
 │   ├── ProfileForm.tsx           # Personal information form
-│   └── SummaryCards.tsx          # Expandable key metrics display
-│   └── Tooltip.tsx               # Reusable tooltip componenet
+│   ├── SummaryCards.tsx          # Expandable key metrics display
+│   └── Tooltip.tsx               # Reusable tooltip component
+├── contexts/
+│   └── CountryContext.tsx    # Country selection state management
+├── countries/                # Country-specific configurations
+│   ├── index.ts              # Country config interface & registry
+│   ├── usa/                  # United States configuration
+│   │   ├── index.ts          # US account types, tax functions
+│   │   ├── constants.ts      # US tax brackets, states
+│   │   ├── taxes.ts          # US tax calculations
+│   │   ├── withdrawals.ts    # US RMD calculations
+│   │   └── benefits.ts       # Social Security calculations
+│   └── canada/               # Canada configuration
+│       ├── index.ts          # CA account types, tax functions
+│       ├── constants.ts      # CA tax brackets, provinces
+│       ├── taxes.ts          # CA tax calculations
+│       ├── withdrawals.ts    # RRIF minimum calculations
+│       └── benefits.ts       # CPP/OAS calculations
 ├── hooks/
 │   ├── useLocalStorage.ts    # localStorage persistence hook
 │   └── useRetirementCalc.ts  # Main calculation orchestrator
@@ -160,7 +202,7 @@ src/
 │   ├── taxes.ts              # Tax calculation functions
 │   └── withdrawals.ts        # Withdrawal phase simulation
 ├── tests/
-│   └── calculations.test.ts  # Comprehensive math tests
+│   └── calculations.test.ts  # Comprehensive math tests (US & CA)
 ├── App.tsx                   # Main application component
 ├── index.css                 # Tailwind CSS configuration
 └── main.tsx                  # Application entry point
@@ -219,12 +261,20 @@ npm test
 ```
 
 Tests cover:
-- Federal and state tax calculations
-- Capital gains taxation
-- RMD calculations
+- Federal and state/provincial tax calculations (US & Canada)
+- Capital gains taxation with country-specific rules
+- RMD calculations (US) and RRIF minimums (Canada)
 - Accumulation phase projections
 - Withdrawal phase simulations
+- Canadian account type recognition
 - Edge cases (zero balances, long retirements, etc.)
+
+**Current test count: 85 tests**
+
+## Credits
+
+### Contributors
+- **bwillem** ([@bguenther3](mailto:bguenther3@gmail.com)) - Multi-country support (Canada)
 
 ## Disclaimer
 
